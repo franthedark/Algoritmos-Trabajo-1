@@ -1,9 +1,11 @@
 #ifndef BUBBLESORT_H
 #define BUBBLESORT_H
 
-#include <stdbool.h>
+#include "producto.h"
 
-//prototipo funcion
-void bubblesortoptimizado(int arr[], int n);
+void bubbleSortProductos(Producto arr[], int n);
 
-#endif //BUBBLE_SORT_H
+//funcion auxiliar para intercambiar dos productos
+void swapProductos(Producto *a, Producto *b);
+
+#endif
