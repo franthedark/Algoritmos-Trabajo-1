@@ -3,6 +3,8 @@
 
 #include "producto.h"
 
-void selectionSortProductos(Producto arr[], int n);
+typedef int (*ComparadorProducto)(const Producto *, const Producto *);
+
+void selectionSortProductos(Producto arr[], int n, ComparadorProducto cmp);
 
 #endif

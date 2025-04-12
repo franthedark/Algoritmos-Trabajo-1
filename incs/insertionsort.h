@@ -3,6 +3,6 @@
 
 #include "producto.h"
 
-void insertionSortProductos(Producto arr[], int n);
+typedef int (*ComparadorProducto)(const Producto *, const Producto *);
 
 #endif
