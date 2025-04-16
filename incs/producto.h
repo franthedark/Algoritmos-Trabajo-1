@@ -9,4 +9,7 @@ typedef struct {
     int stock;
 } Producto;
 
+// Declaración de funciones auxiliares
+void imprimirProducto(const Producto *p);
+
 #endif
