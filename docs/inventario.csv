@@ -1,0 +1,51 @@
+id,nombre,categoria,precio,stock
+191,Procesador 138,Procesador,22453.52,41
+286,Case 354,Case,46246.10,10
+85,Laptop 89,Laptop,28296.72,53
+424,UPS 348,UPS,735.82,90
+347,Ventilador 355,Ventilador,49050.27,80
+500,Bisel 110,Bisel,44736.66,65
+9,Decodificador 432,Decodificador,38006.45,61
+472,Kit 253,Kit,39021.76,42
+162,Parlante 262,Parlante,47191.02,86
+114,Case 165,Case,46264.60,60
+6,Firewall 249,Firewall,1618.59,38
+380,Switch POE 209,Switch POE,46884.89,30
+373,UPS 439,UPS,16646.55,44
+351,Temporizador 75,Temporizador,9406.02,4
+468,Bisel 417,Bisel,34190.80,71
+203,Distribuidor 448,Distribuidor,39472.18,58
+407,Firewall 16,Firewall,23606.54,88
+54,Unidad 499,Unidad,39691.13,76
+229,Case 373,Case,11996.66,94
+16,Auricular 121,Auricular,47874.41,72
+276,Micrófono 88,Micrófono,12805.44,41
+158,Cámara IP 238,Cámara IP,42859.56,69
+95,Auricular 245,Auricular,27506.10,70
+385,Extractor 256,Extractor,9528.82,29
+131,Kit solar 466,Kit solar,3490.02,81
+459,Teclado 350,Teclado,6390.78,12
+321,Laptop 425,Laptop,42902.59,51
+117,Auricular 201,Auricular,22838.54,25
+369,Rack 87,Rack,9044.65,11
+308,Coder 426,Coder,10625.62,84
+406,Firewall 47,Firewall,41693.71,96
+27,Notebook 66,Notebook,14497.27,61
+48,Disco 153,Disco,48811.58,21
+270,Cámara IP 121,Cámara IP,38569.75,3
+489,Case 442,Case,31449.53,87
+249,Firewall 464,Firewall,47868.11,39
+370,Grabadora 285,Grabadora,23037.40,51
+163,Estación 116,Estación,5538.90,82
+345,Temporizador 500,Temporizador,22708.48,49
+420,Cable 227,Cable,11618.91,45
+82,Ventilador 221,Ventilador,3310.22,86
+271,Sintonizador 222,Sintonizador,13484.33,79
+91,Notebook 363,Notebook,14618.30,40
+377,Sensor 456,Sensor,6656.18,86
+152,Proyector láser 138,Proyector láser,47514.99,9
+409,Puntero 287,Puntero,2418.00,66
+368,Procesador 338,Procesador,28622.41,66
+244,Plotter 206,Plotter,22714.65,98
+284,Pantalla 87,Pantalla,37969.97,91
+427,Auricular 195,Auricular,41217.33,45
