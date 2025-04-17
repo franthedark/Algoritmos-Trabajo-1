@@ -29,3 +29,11 @@ void SecBuscarRangoPrecio(Producto productos[], int n, double min, double max) {
     }
 }
 
+int SecBusxID(Producto productos[], int n, int idBuscado) {
+    for (int i = 0; i < n; i++) {
+        if (productos[i].id == idBuscado) {
+            return i;
+        }
+    }
+    return -1;
+}

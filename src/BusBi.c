@@ -58,3 +58,18 @@ int buscarPorPrecioBinaria(Producto productos[], int n, double precioBuscado) {
     }
     return -1;
 }
+
+
+int buscarPorIDBinaria(Producto productos[], int n, int idBuscado) {
+    int izquierda = 0, derecha = n - 1;
+    while (izquierda <= derecha) {
+        int medio = izquierda + (derecha - izquierda) / 2;
+        if (productos[medio].id == idBuscado)
+            return medio;
+        else if (productos[medio].id < idBuscado)
+            izquierda = medio + 1;
+        else
+            derecha = medio - 1;
+    }
+    return -1;
+}

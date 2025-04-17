@@ -31,11 +31,13 @@ void mostrarMenu() {
     printf("1. Leer archivo CSV\n");
     printf("2. Ordenar productos por ID\n");
     printf("3. Ordenar productos por precio\n");
-    printf("4. Buscar producto por nombre\n");
-    printf("5. Mostrar estadisticas del inventario\n");
-    //printf("6. Generar productos aleatorios\n");
-    printf("6. Mostrar todos los productos\n");
-    printf("7. Salir\n");
+    printf("4. Ordenar productos por nombre\n");
+    printf("5. Ordenar productos por categoria\n");
+    printf("6. Ordenar productos por stock\n");
+    printf("7. Buscar producto\n");
+    printf("8. Mostrar estadisticas del inventario\n");
+    printf("9. Mostrar todos los productos\n");
+    printf("10. Salir\n");
     printf("Seleccione una opcion: ");
 }
 
@@ -50,9 +52,9 @@ void ejecutarMenu() {
         mostrarMenu();
         scanf("%d", &opcion);
 
-        if (!csvcargado && opcion >= 2 && opcion <= 6) {
-        printf("Primero debe cargar el archivo CSV (opción 1).\n");
-        continue;
+        if (!csvcargado && opcion >= 2 && opcion <= 9) {
+            printf("Primero debe cargar el archivo CSV (opción 1).\n");
+            continue;
         }
 
         switch (opcion) {
@@ -65,133 +67,168 @@ void ejecutarMenu() {
                     printf("No se cargaron productos.\n");
                 }
                 break;
-            if (csvcargado == 1)
-            {
-                case 2:
-                    bubbleSortProductos(productos, cantidad, compararPorId);
-                    printf("Productos ordenados por ID.\n");
-                    break;
 
-                case 3:
-                    bubbleSortProductos(productos, cantidad, compararPorPrecio);
-                    printf("Productos ordenados por precio.\n");
-                    break;
+            case 2:
+                bubbleSortProductos(productos, cantidad, compararPorId);
+                printf("Productos ordenados por ID.\n");
+                break;
 
-                case 4: {
-                    int subopcion;
-                    printf("\n--- Opciones de Búsqueda ---\n");
-                    printf("1. Buscar por nombre (secuencial)\n");
-                    printf("2. Buscar por nombre (binaria)\n");
-                    printf("3. Buscar por precio (secuencial)\n");
-                    printf("4. Buscar por precio (binaria)\n");
-                    printf("Seleccione una opción: ");
-                    scanf("%d", &subopcion);
+            case 3:
+                bubbleSortProductos(productos, cantidad, compararPorPrecio);
+                printf("Productos ordenados por precio.\n");
+                break;
 
-                    if (subopcion == 1) { //secuencial por nombre
-                        char nombreBuscado[50];
-                        printf("Ingrese el nombre del producto a buscar: ");
-                        getchar(); // Limpia el buffer
-                        fgets(nombreBuscado, sizeof(nombreBuscado), stdin);
-                        nombreBuscado[strcspn(nombreBuscado, "\n")] = 0;
+            case 4:
+                bubbleSortProductos(productos, cantidad, compararPorNombre);
+                printf("Productos ordenados por nombre.\n");
+                break;
 
-                        int indice = SecBusxNom(productos, cantidad, nombreBuscado);
-                        if (indice != -1) {
-                            printf("Producto encontrado: ID=%d | Nombre=%s | Precio=%.2f\n",
-                                productos[indice].id, productos[indice].nombre, productos[indice].precio);
-                        } else {
-                            printf("Producto no encontrado.\n");
-                        }
-                    } 
-                    else if (subopcion == 2) {//binaria por nombre
-                        char nombreBuscado[50];
-                        printf("Ingrese el nombre del producto a buscar: ");
-                        getchar(); // Limpia el buffer
-                        fgets(nombreBuscado, sizeof(nombreBuscado), stdin);
-                        nombreBuscado[strcspn(nombreBuscado, "\n")] = 0;
+            case 5:
+                bubbleSortProductos(productos, cantidad, compararPorCategoria);
+                printf("Productos ordenados por categoría.\n");
+                break;
 
-                        int indice = buscarPorNombreBinaria(productos, cantidad, nombreBuscado);
-                        if (indice != -1) {
-                            printf("Producto encontrado: ID=%d | Nombre=%s | Precio=%.2f\n",
-                                productos[indice].id, productos[indice].nombre, productos[indice].precio);
-                        } else {
-                            printf("Producto no encontrado.\n");
-                        }
+            case 6:
+                bubbleSortProductos(productos, cantidad, compararPorStock);
+                printf("Productos ordenados por stock.\n");
+                break;
+
+            case 7: {
+                int subopcion;
+                printf("\n--- Opciones de Busqueda ---\n");
+                printf("1. Buscar por nombre (secuencial)\n");
+                printf("2. Buscar por nombre (binaria)\n");
+                printf("3. Buscar por precio (secuencial)\n");
+                printf("4. Buscar por precio (binaria)\n");
+                printf("5. Buscar por ID (secuencial)\n");
+                printf("6. Buscar por ID (binaria)\n");
+
+                printf("Seleccione una opción: ");
+                scanf("%d", &subopcion);
+
+                if (subopcion == 1) {
+                    char nombreBuscado[50];
+                    printf("Ingrese el nombre del producto a buscar: ");
+                    getchar(); // Limpia el buffer
+                    fgets(nombreBuscado, sizeof(nombreBuscado), stdin);
+                    nombreBuscado[strcspn(nombreBuscado, "\n")] = 0;
+
+                    int indice = SecBusxNom(productos, cantidad, nombreBuscado);
+                    if (indice != -1) {
+                        printf("Producto encontrado: ID=%d | Nombre=%s | Precio=%.2f\n",
+                               productos[indice].id, productos[indice].nombre, productos[indice].precio);
+                    } else {
+                        printf("Producto no encontrado.\n");
                     }
-                    else if (subopcion == 3) {//secuencial por precio
-                        double precioMin, precioMax;
-                        printf("Ingrese el precio mínimo: ");
-                        scanf("%lf", &precioMin);
-                        printf("Ingrese el precio máximo: ");
-                        scanf("%lf", &precioMax);
+                } else if (subopcion == 2) {
+                    char nombreBuscado[50];
+                    printf("Ingrese el nombre del producto a buscar: ");
+                    getchar();
+                    fgets(nombreBuscado, sizeof(nombreBuscado), stdin);
+                    nombreBuscado[strcspn(nombreBuscado, "\n")] = 0;
 
-                        SecBuscarRangoPrecio(productos, cantidad, precioMin, precioMax);
+                    int indice = buscarPorNombreBinaria(productos, cantidad, nombreBuscado);
+                    if (indice != -1) {
+                        printf("Producto encontrado: ID=%d | Nombre=%s | Precio=%.2f\n",
+                               productos[indice].id, productos[indice].nombre, productos[indice].precio);
+                    } else {
+                        printf("Producto no encontrado.\n");
                     }
-                    else if (subopcion == 4) {//binaria por precio
-                        double precioBuscado;
-                        printf("ingrese el precio del producto a buscar: ");
-                        scanf("%lf", &precioBuscado);
+                } else if (subopcion == 3) {
+                    double precioMin, precioMax;
+                    printf("Ingrese el precio mínimo: ");
+                    scanf("%lf", &precioMin);
+                    printf("Ingrese el precio máximo: ");
+                    scanf("%lf", &precioMax);
 
-                        int indice = buscarPorPrecioBinaria(productos, cantidad, precioBuscado);
-                        if (indice != -1) {
-                            printf("Producto encontrado: ID=%d | Nombre=%s | Precio=%.2f\n",
-                                productos[indice].id, productos[indice].nombre, productos[indice].precio);
-                        } else {
-                            printf("Producto no encontrado.\n");
-                        }
+                    SecBuscarRangoPrecio(productos, cantidad, precioMin, precioMax);
+                } else if (subopcion == 4) {
+                    double precioBuscado;
+                    printf("Ingrese el precio del producto a buscar: ");
+                    scanf("%lf", &precioBuscado);
+
+                    int indice = buscarPorPrecioBinaria(productos, cantidad, precioBuscado);
+                    if (indice != -1) {
+                        printf("Producto encontrado: ID=%d | Nombre=%s | Precio=%.2f\n",
+                               productos[indice].id, productos[indice].nombre, productos[indice].precio);
+                    } else {
+                        printf("Producto no encontrado.\n");
                     }
-                else{
-                    printf("Opcion no valida.\n");
+                }else if (subopcion == 5) {
+                    int id;
+                    printf("Ingrese el ID del producto a buscar: ");
+                    scanf("%d", &id);
+
+                    int indice = SecBusxID(productos, cantidad, id);
+                    if (indice != -1) {
+                        printf("Producto encontrado: ID=%d | Nombre=%s | Precio=%.2f\n",
+                            productos[indice].id, productos[indice].nombre, productos[indice].precio);
+                    } else {
+                        printf("Producto no encontrado.\n");
+                    }
+                } else if (subopcion == 6) {
+                    int id;
+                    printf("Ingrese el ID del producto a buscar: ");
+                    scanf("%d", &id);
+
+                    int indice = buscarPorIDBinaria(productos, cantidad, id);
+                    if (indice != -1) {
+                        printf("Producto encontrado: ID=%d | Nombre=%s | Precio=%.2f\n",
+                            productos[indice].id, productos[indice].nombre, productos[indice].precio);
+                    } else {
+                        printf("Producto no encontrado.\n");
+                    }
+                }
+
+                 else {
+                    printf("Opción no valida.\n");
                 }
                 break;
             }
 
-                case 5: {
-                    double valorTotal = 0;
-                    Producto *masCaro = NULL;
-                    int bajoStock = 0, caros = 0;
+            case 8: {
+                double valorTotal = 0;
+                Producto *masCaro = NULL;
+                int bajoStock = 0, caros = 0;
 
-                    for (int i = 0; i < cantidad; i++) {
-                        valorTotal += productos[i].precio * productos[i].stock;
+                for (int i = 0; i < cantidad; i++) {
+                    valorTotal += productos[i].precio * productos[i].stock;
 
-                        if (!masCaro || productos[i].precio > masCaro->precio)
-                            masCaro = &productos[i];
+                    if (!masCaro || productos[i].precio > masCaro->precio)
+                        masCaro = &productos[i];
 
-                        if (productos[i].stock < 10)
-                            bajoStock++;
+                    if (productos[i].stock < 10)
+                        bajoStock++;
 
-                        if (productos[i].precio > 200.0)
-                            caros++;
-                    }
-
-                    printf("valor total del inventario: %.2f\n", valorTotal);
-                    if (masCaro) {
-                        printf("producto más caro: ID=%d | Nombre=%s | Precio=%.2f\n",
-                            masCaro->id, masCaro->nombre, masCaro->precio);
-                    }
-                    printf("%% productos con bajo stock: %.2f%%\n", (bajoStock * 100.0) / cantidad);
-                    printf("%% productos caros (> $200): %.2f%%\n", (caros * 100.0) / cantidad);
-                    break;
+                    if (productos[i].precio > 200.0)
+                        caros++;
                 }
 
-                case 6:
-                    if (cantidad > 0) {
-                        imprimirTablaProductos(productos, cantidad);
-                    } else {
-                        printf("no hay productos cargados.\n");
-                    }
-                    break;/* code */
+                printf("Valor total del inventario: %.2f\n", valorTotal);
+                if (masCaro) {
+                    printf("Producto mas caro: ID=%d | Nombre=%s | Precio=%.2f\n",
+                           masCaro->id, masCaro->nombre, masCaro->precio);
+                }
+                printf("%% productos con bajo stock: %.2f%%\n", (bajoStock * 100.0) / cantidad);
+                printf("%% productos caros (> $200): %.2f%%\n", (caros * 100.0) / cantidad);
+                break;
             }
-            else printf("no se a leido el archivo csv");
-            
-                
 
-            case 7:
-                printf("saliendo\n");
+            case 9:
+                if (cantidad > 0) {
+                    imprimirTablaProductos(productos, cantidad);
+                } else {
+                    printf("No hay productos cargados.\n");
+                }
+                break;
+
+            case 10:
+                printf("Saliendo del programa.\n");
                 break;
 
             default:
-                printf("Opción no valida. Intente de nuevo.\n");
+                printf("Opcion no valida. Intente de nuevo.\n");
         }
 
-    } while (opcion != 7);
+    } while (opcion != 10);
 }
