@@ -5,12 +5,13 @@
 #include "bubblesort.h"
 #include "comparadores.h"
 #include "bussec.h"
+#include "busbi.h"
 #include "time.h"
 #include <locale.h> // Necesario para setlocale
 
 #define MAX_PRODUCTOS 1000
 
-void imprimirTablaProductos(Producto productos[], int cantidad);
+/*void imprimirTablaProductos(Producto productos[], int cantidad);
 
 void mostrarMenu() {
     printf("\n--- Menu del Sistema de Inventario ---\n");
@@ -179,10 +180,10 @@ int main() {
 
     return 0;
 }
+*/
 
 
-
-/* int main() {
+ int main() {
     ejecutarMenu();
     return 0;
-} */
+}
