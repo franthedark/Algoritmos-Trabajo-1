@@ -57,7 +57,7 @@ void ejecutarMenu() {
 
         switch (opcion) {
             case 1:
-                leerCSV("../docs/inventario.csv", productos, &cantidad);
+                leerCSV("docs/inventario.csv", productos, &cantidad);
                 if (cantidad > 0) {
                     imprimirTablaProductos(productos, cantidad);
                     csvcargado = 1;
