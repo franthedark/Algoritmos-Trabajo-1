@@ -3,13 +3,13 @@
 #include <string.h>
 #include <time.h>
 
-#define MAX_LINEA 100
-#define MAX_PALABRAS 3000
-#define MAX_NOMBRE 100
+#define MAX_LINEA     100
+#define MAX_PALABRAS  3000
+#define MAX_NOMBRE    100
 #define ARCHIVO_PALABRAS "../docs/palabras.txt"
-#define ARCHIVO_SALIDA "../docs/inventario.csv"
+#define ARCHIVO_SALIDA   "../docs/inventario.csv"
 
-//verifica si un ID ya fue utilizado
+//verifica si un id ya fue utilizado
 int id_repetido(int *ids, int cantidad, int nuevo_id) {
     for (int i = 0; i < cantidad; i++) {
         if (ids[i] == nuevo_id) return 1;
@@ -24,12 +24,12 @@ int main() {
     int total_palabras = 0;
     int *ids_usados;
 
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
 
     //leer palabras desde el archivo
     archivo_txt = fopen(ARCHIVO_PALABRAS, "r");
     if (!archivo_txt) {
-        perror("Error al abrir palabras_extendido.txt");
+        perror("Error al abrir palabras.txt");
         return 1;
     }
 
@@ -42,12 +42,15 @@ int main() {
     fclose(archivo_txt);
 
     if (total_palabras == 0) {
-        printf("No se encontraron palabras clave en el archivo.\n");
+        fprintf(stderr, "No se encontraron palabras clave en el archivo.\n");
         return 1;
     }
 
     printf("Ingrese la cantidad de productos a generar: ");
-    scanf("%d", &cantidad);
+    if (scanf("%d", &cantidad) != 1 || cantidad <= 0) {
+        fprintf(stderr, "Cantidad inválida.\n");
+        return 1;
+    }
 
     ids_usados = malloc(sizeof(int) * cantidad);
     if (!ids_usados) {
@@ -58,39 +61,47 @@ int main() {
     archivo_csv = fopen(ARCHIVO_SALIDA, "w");
     if (!archivo_csv) {
         perror("Error al crear archivo CSV");
+        free(ids_usados);
         return 1;
     }
 
+    //encabezado csv
     fprintf(archivo_csv, "id,nombre,categoria,precio,stock\n");
 
     for (int i = 0; i < cantidad; i++) {
         int id_aleatorio;
-
-        //generar ID unico
+        //generar id unico
         do {
             id_aleatorio = rand() % (cantidad * 10) + 1;
         } while (id_repetido(ids_usados, i, id_aleatorio));
         ids_usados[i] = id_aleatorio;
 
-        int palabra_idx = rand() % total_palabras;
+        //elegir palabra base y numero de modelo
+        int idx_pal = rand() % total_palabras;
         int modelo_num = rand() % 500 + 1;
 
+        //construye nombre y reemplaza espacios por guiones bajos
         char nombre[MAX_NOMBRE];
-        snprintf(nombre, MAX_NOMBRE, "%s %d", palabras[palabra_idx], modelo_num);
+        snprintf(nombre, MAX_NOMBRE, "%s_%d", palabras[idx_pal], modelo_num);
 
+        //precio y stock aleatorios
         float precio = (rand() % 5000000 + 10000) / 100.0f;
-        int stock = rand() % 100 + 1;
+        int stock   = rand() % 100 + 1;
 
-        fprintf(archivo_csv, "%d,%s,%s,%.2f,%d\n", id_aleatorio, nombre, palabras[palabra_idx], precio, stock);
+        fprintf(archivo_csv, "%d,%s,%s,%.2f,%d\n",
+                id_aleatorio,
+                nombre,
+                palabras[idx_pal],
+                precio,
+                stock);
     }
 
     fclose(archivo_csv);
     free(ids_usados);
-
-    for (int i = 0; i < total_palabras; i++) {
+    for (int i = 0; i < total_palabras; i++)
         free(palabras[i]);
-    }
 
-    printf("Archivo %s generado correctamente con %d productos.\n", ARCHIVO_SALIDA, cantidad);
+    printf("Archivo %s generado correctamente con %d productos.\n",
+           ARCHIVO_SALIDA, cantidad);
     return 0;
 }
