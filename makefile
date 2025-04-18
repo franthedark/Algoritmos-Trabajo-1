@@ -1,45 +1,56 @@
-#makefile para el proyecto principal
+# Makefile para el proyecto principal con cleanrun
 
-#directorios
+# Directorios
 INCDIR := incs
 SRCDIR := src
 OBJDIR := obj
 
-#compilador y flags
+# Compilador y flags
 CC     := gcc
 CFLAGS := -Wall -Wextra -I$(INCDIR) -g
 
+# Fuentes del proyecto principal (excluye utils en tools/)
 SRC := $(filter-out \
         $(SRCDIR)/test_algos.c \
         $(SRCDIR)/generastock.c, \
         $(wildcard $(SRCDIR)/*.c))
 
-#objetos van en obj/, mismo nombre de archivo .o
+# Objetos van a obj/
 OBJ := $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SRC))
 
-#ejecutable
+# Ejecutable del proyecto principal
 TARGET := programa
 
-.PHONY: all clean cleanrun
+# Binario de generador de stock
+GEN := tools/generastock
 
-#default: crea obj/ y luego el ejecutable
+.PHONY: all clean cleanrun generastock
+
 all: $(OBJDIR) $(TARGET)
 
-#crea el directorio obj/ si no existe
+# Crear obj/ si no existe
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
-#enlaza el ejecutable a partir de los objetos
+# Compilar proyecto principal
 $(TARGET): $(OBJ)
 	$(CC) $(CFLAGS) -o $@ $^
 
+# Regla genérica .c -> obj/%.o
 $(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-#limpia objetos y ejecutable
+# Limpiar objetos y ejecutable
 clean:
 	rm -rf $(OBJDIR) $(TARGET)
 
-#limpia recompila y ejecuta CSV
-cleanrun: clean all
+# Compilar y ejecutar generastock
+generastock: tools/generastock.c
+	$(CC) $(CFLAGS) -o $(GEN) tools/generastock.c
+
+# cleanrun: limpia, compila proyecto, genera CSV y ejecuta programa
+cleanrun: clean all generastock
+	@echo "\n>>> Generando inventario..."
+	@./$(GEN)
+	@echo "\n>>> Ejecutando programa principal..."
 	@./$(TARGET) docs/inventario.csv
