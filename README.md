@@ -1,7 +1,41 @@
 # Algoritmos Trabajo 1
 En este proyecto, los estudiantes implementarán y analizarán algoritmos básicos de ordenación y búsqueda, aplicándolos a un sistema de gestión de inventario. El objetivo es desarrollar un sistema que permita ordenar y buscar productos según diferentes criterios, evaluando el rendimiento de los algoritmos implementados.
 
-Planificación de Roles - Proyecto Sistema de Inventario
+# Instrucciones para ejecutar el programa y herramientas adicionales
+
+Herramientas extra:
+
+  Si desea ejecutar pruebas y además generar nuevas cantidades siga las siguientes instrucciones:
+
+  1. Diríjase a la carpeta "tools" en la raíz del proyecto.
+  2. Ejecute el comando
+
+    make cleanrun
+
+  3. Siga las instrucciones del programa.
+
+
+  Si desea ejecutar solo el generador de inventario, haga lo siguiente:
+
+  1. Diríjase a la carpeta "tools" en la raíz del proyecto.
+  2. Ejecute los siguientes comandos:
+
+    gcc generastock.c -o generar
+    ./generar
+  
+  4. Siga las instrucciones del programa.
+
+Programa Principal:
+
+  1. Diríjase a la carpeta raíz del proyecto.
+  2. Ejecute el siguiente comando:
+
+    make cleanrun
+
+  3. Siga las instrucciones del programa.
+
+
+# Planificación de Roles - Proyecto Sistema de Inventario
 
 # Francisco Mercado
 
