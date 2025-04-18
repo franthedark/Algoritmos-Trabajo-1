@@ -35,7 +35,7 @@ static void print_system_info(void) {
     char line[256];
     printf("=== Información del sistema ===\n");
 
-    //CPU
+    // CPU
     if ((fp = fopen("/proc/cpuinfo","r"))) {
         int cores = 0; char model[256] = "";
         while (fgets(line,sizeof(line),fp)) {
@@ -52,7 +52,7 @@ static void print_system_info(void) {
         printf("CPU: %s  (%d cores)\n",model,cores);
     } else perror("Error abriendo /proc/cpuinfo");
 
-    //RAM
+    // RAM
     if ((fp = fopen("/proc/meminfo","r"))) {
         long mem_kb = 0;
         while (fgets(line,sizeof(line),fp)) {
@@ -78,7 +78,7 @@ static size_t leerCSV(const char *file, Producto **out) {
     if (!arr) { perror("malloc"); fclose(fp); return 0; }
 
     char line[LINE_BUFFER];
-    //saltar encabezado
+    // saltar encabezado
     if (!fgets(line,sizeof(line),fp)) {
         fclose(fp); free(arr); return 0;
     }
@@ -128,6 +128,27 @@ static int cmpRes(const void *a, const void *b) {
     return ta < tb ? -1 : ta > tb ? 1 : 0;
 }
 
+// Función para graficar usando gnuplot (gráfico de línea)
+static void plotResults(const Result results[], int rc) {
+    FILE *gp = popen("gnuplot -persist", "w");
+    if (!gp) {
+        perror("popen gnuplot");
+        return;
+    }
+    fprintf(gp,
+        "set title 'Rendimiento de Algoritmos'\n"
+        "set ylabel 'Tiempo (s)'\n"
+        "set style data linespoints\n"
+        "set xtics rotate by -45 scale 0\n"
+        "plot '-' using 2:xtic(1) with linespoints notitle\n"
+    );
+    for (int i = 0; i < rc; i++) {
+        fprintf(gp, "\"%s\" %.15f\n", results[i].name, results[i].time);
+    }
+    fprintf(gp, "e\n");
+    pclose(gp);
+}
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr,"Uso: %s <archivo.csv>\n",argv[0]);
@@ -153,41 +174,41 @@ int main(int argc, char *argv[]) {
 
     clock_t t0; double dt;
 
-    //ordenación por precio ---
+    // ordenación por precio ---
     copyProds(prods, tmp, n);
     t0 = clock();
     bubbleSortProductos(tmp, n, compararPorPrecio);
     dt = (double)(clock() - t0) / CLOCKS_PER_SEC;
     snprintf(results[rc].name,32,"BubbleSort PRICE"); results[rc++].time = dt;
-    fprintf(out,"%-20s: %.6f s\n","BubbleSort PRICE", dt);
+    fprintf(out,"%-20s: %.15f s\n","BubbleSort PRICE", dt);
 
     copyProds(prods, tmp, n);
     t0 = clock();
     insertionSortProductos(tmp, n, compararPorPrecio);
     dt = (double)(clock() - t0) / CLOCKS_PER_SEC;
     snprintf(results[rc].name,32,"InsertionSort PRICE"); results[rc++].time = dt;
-    fprintf(out,"%-20s: %.6f s\n","InsertionSort PRICE", dt);
+    fprintf(out,"%-20s: %.15f s\n","InsertionSort PRICE", dt);
 
     copyProds(prods, tmp, n);
     t0 = clock();
     selectionSortProductos(tmp, n, compararPorPrecio);
     dt = (double)(clock() - t0) / CLOCKS_PER_SEC;
     snprintf(results[rc].name,32,"SelectionSort PRICE"); results[rc++].time = dt;
-    fprintf(out,"%-20s: %.6f s\n\n","SelectionSort PRICE", dt);
+    fprintf(out,"%-20s: %.15f s\n\n","SelectionSort PRICE", dt);
 
-    //busqueda secuencial y binaria por id y stock
+    // busqueda secuencial y binaria por id y stock
     int *vals   = malloc(n * sizeof *vals);
     int *sorted = malloc(n * sizeof *sorted);
     int idx, key;
 
-    //id
+    // id
     for (size_t i = 0; i < n; i++) vals[i] = prods[i].id;
     key = vals[n - 1];
     t0 = clock();
     idx = Bseq2(vals, key, (int)n);
     dt = (double)(clock() - t0) / CLOCKS_PER_SEC;
     snprintf(results[rc].name,32,"Bseq2 ID"); results[rc++].time = dt;
-    fprintf(out,"%-20s idx=%d, %.6f s\n","Bseq2 ID", idx, dt);
+    fprintf(out,"%-20s idx=%d, %.15f s\n","Bseq2 ID", idx, dt);
 
     memcpy(sorted, vals, n * sizeof *sorted);
     qsort(sorted, n, sizeof *sorted, compareInt);
@@ -195,16 +216,16 @@ int main(int argc, char *argv[]) {
     idx = BusBi(sorted, (int)n, key);
     dt = (double)(clock() - t0) / CLOCKS_PER_SEC;
     snprintf(results[rc].name,32,"BusBi ID"); results[rc++].time = dt;
-    fprintf(out,"%-20s idx=%d, %.6f s\n\n","BusBi ID", idx, dt);
+    fprintf(out,"%-20s idx=%d, %.15f s\n\n","BusBi ID", idx, dt);
 
-    //stock
+    // stock
     for (size_t i = 0; i < n; i++) vals[i] = prods[i].stock;
     key = vals[n - 1];
     t0 = clock();
     idx = Bseq2(vals, key, (int)n);
     dt = (double)(clock() - t0) / CLOCKS_PER_SEC;
     snprintf(results[rc].name,32,"Bseq2 STOCK"); results[rc++].time = dt;
-    fprintf(out,"%-20s idx=%d, %.6f s\n","Bseq2 STOCK", idx, dt);
+    fprintf(out,"%-20s idx=%d, %.15f s\n","Bseq2 STOCK", idx, dt);
 
     memcpy(sorted, vals, n * sizeof *sorted);
     qsort(sorted, n, sizeof *sorted, compareInt);
@@ -212,18 +233,22 @@ int main(int argc, char *argv[]) {
     idx = BusBi(sorted, (int)n, key);
     dt = (double)(clock() - t0) / CLOCKS_PER_SEC;
     snprintf(results[rc].name,32,"BusBi STOCK"); results[rc++].time = dt;
-    fprintf(out,"%-20s idx=%d, %.6f s\n\n","BusBi STOCK", idx, dt);
+    fprintf(out,"%-20s idx=%d, %.15f s\n\n","BusBi STOCK", idx, dt);
 
-    //ranking final
+    // ranking final
     fprintf(out,"=== Ranking ascendente ===\n");
     qsort(results, rc, sizeof results[0], cmpRes);
     for (int i = 0; i < rc; i++) {
-        fprintf(out,"%2d) %-20s: %.6f s\n",
+        fprintf(out,"%2d) %-20s: %.15f s\n",
                 i+1, results[i].name, results[i].time);
     }
 
-    //limpieza
     fclose(out);
+
+    // Graficar resultados
+    plotResults(results, rc);
+
+    // limpieza
     free(tmp);
     free(prods);
     free(vals);
